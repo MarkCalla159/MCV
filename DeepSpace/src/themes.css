@@ -1,0 +1,78 @@
+/*
+ * Theme overrides — applied via <html data-theme="<id>">.
+ *
+ * The scaffold @theme block in `styles.css` remains a fallback for shadcn
+ * utilities. MaintenanceFlow's product tokens are defined in the paper block
+ * below so the light visual system is the only supported app theme.
+ *
+ * To add a theme:
+ *   1. Add a `[data-theme="my-id"] { ... }` block overriding the shadcn
+ *      tokens below. If the theme is light, include `color-scheme: light;`
+ *      so native form controls (calendar icons, scrollbars) match.
+ *   2. Add an entry to `src/themes.ts` so it shows up in the typed catalog.
+ *   3. Add the theme's --color-background to the first-paint <style> block
+ *      in index.html so the pre-CSS frame matches (no white flash).
+ *   4. Switch to it via `data-theme` on <html> in index.html.
+ */
+
+/* MaintenanceFlow paper — the product surface and its shared UI tokens. */
+[data-theme="paper"] {
+  color-scheme: light;
+  --mf-ink: #18302f;
+  --mf-muted: #536963;
+  --mf-line: #dce7e3;
+  --mf-line-strong: #c7dad4;
+  --mf-paper: #f7faf8;
+  --mf-surface: #ffffff;
+  --mf-sidebar: #edf5f1;
+  --mf-sidebar-hover: #e2f0eb;
+  --mf-sidebar-active: #d8eee7;
+  --mf-sidebar-active-border: #b8dacf;
+  --mf-mobile-surface: #f4faf7;
+  --mf-teal: #0e756b;
+  --mf-teal-dark: #0a594f;
+  --mf-focus-ring: #075e54;
+  --mf-teal-on: #ffffff;
+  --mf-teal-soft: #dff5ef;
+  --mf-lilac: #eee9fb;
+  --mf-yellow: #fff1c6;
+  --mf-blue: #3676aa;
+  --mf-blue-soft: #e3f1fb;
+  --mf-violet: #7157aa;
+  --mf-warning: #8a5c00;
+  --mf-danger: #9c3e38;
+  --mf-danger-soft: #fff0ed;
+  --mf-table-head: #f8fbfa;
+  --mf-skeleton: #dfe9e5;
+  --mf-skeleton-highlight: #eff5f2;
+  --mf-font-display: 'DM Serif Display', serif;
+  --mf-font-body: 'DM Sans', sans-serif;
+  --mf-type-body: 1rem;
+  --mf-type-small: .875rem;
+  --mf-type-label: .75rem;
+  --mf-type-section: clamp(1.25rem, 1.1rem + .45vw, 1.65rem);
+  --mf-type-page: clamp(2.25rem, 1.65rem + 2.7vw, 4rem);
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-card: #fafafa;
+  --color-card-foreground: #0a0a0a;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0a0a0a;
+  --color-primary: #171717;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f5f5f5;
+  --color-secondary-foreground: #0a0a0a;
+  --color-muted: #f5f5f5;
+  --color-muted-foreground: #525252;
+  --color-accent: #e5e5e5;
+  --color-accent-foreground: #0a0a0a;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #e5e5e5;
+  --color-input: #e5e5e5;
+  --color-ring: #171717;
+  --shadow-card: 0 1px 2px 0 rgba(0, 0, 0, 0.016);
+  --shadow-card-hover: 0 2px 8px 0 rgba(0, 0, 0, 0.032);
+  --color-shell: #fafafa;
+  --color-shell-panel: #ffffff;
+}

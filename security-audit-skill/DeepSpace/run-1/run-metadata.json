@@ -1,0 +1,46 @@
+{
+  "run_id": "deepspace-maintenanceflow-20261123-run-1",
+  "repo": "DeepSpace",
+  "target": "C:/MCV/DeepSpace",
+  "source_ref": {
+    "parent_git_root": "C:/MCV",
+    "parent_head": "109ca57e918748f22033d2a15a775fdac7725a85",
+    "target_state": "untracked target directory; no target-specific commit",
+    "worktree": "dirty/untracked"
+  },
+  "profile": "standard",
+  "scope_paths": ["."],
+  "budget": null,
+  "execution_policy": "sandboxed-source-and-local-only",
+  "companion_files": [
+    "ATTACK-CLASSES.md",
+    "WEB-PROTOCOL-AND-AUTH.md",
+    "CLIENT-SIDE.md",
+    "CLOUD-AND-DEPLOYMENT.md",
+    "DATA-ISOLATION-AND-LIFECYCLE.md",
+    "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md",
+    "SUPPLY-CHAIN-AND-RELEASE.md",
+    "AI-AND-LLM.md"
+  ],
+  "prior_runs": [],
+  "shared_file_owners": {
+    "run-metadata.json": "parent",
+    "architecture.md": "parent",
+    "coverage-ledger.json": "parent",
+    "findings.json": "parent",
+    "REPORT.md": "parent",
+    "FINDINGS-DETAIL.md": "parent",
+    "NEEDS-VALIDATION.md": "parent"
+  },
+  "sandbox_constraints": {
+    "target_execution": "not run: this environment cannot prove the required empty allowlisted environment, read-only target/toolchain mounts, scratch-only writes, and no-follow promotion controls",
+    "network": "source review only; no external or deployed traffic",
+    "secrets": "no credentials or authentication state supplied to audit workers"
+  },
+  "run_status": "incomplete",
+  "completion_blockers": [
+    "missing_required_os_sandbox_controls_for_target_execution",
+    "no_deployed_endpoint_or_production_runtime_validation",
+    "official_validators_unavailable_on_this_host: O_NOFOLLOW and nonblocking input protection are not exposed by the Windows Node runtime"
+  ]
+}

@@ -1,0 +1,677 @@
+[
+  {
+    "coverage_id": "src%2Factions%2Findex.ts%23actions::src%2Fserver%2Faction-routes.ts%23registerActionRoutes::profile%2Fquick%2Fall-in-scope-subsystems::ATTACK-CLASSES.md%23Access%20control",
+    "canonical_refs": {
+      "surface": "src/actions/index.ts#actions",
+      "boundary": "src/server/action-routes.ts#registerActionRoutes",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "ATTACK-CLASSES.md#Access control"
+    },
+    "surface": "MaintenanceFlow action API",
+    "boundary": "src/server/action-routes.ts#registerActionRoutes",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "Access control",
+    "starting_paths": [
+      "src/server/action-routes.ts",
+      "src/actions/index.ts",
+      "src/actions/maintenance.ts",
+      "worker.ts"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Access control",
+    "selected_companion_blocks": [
+      "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+      "WEB-PROTOCOL-AND-AUTH.md#JWT verification and claim binding",
+      "WEB-PROTOCOL-AND-AUTH.md#Universal moves",
+      "WEB-PROTOCOL-AND-AUTH.md#Validation rules",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Core discipline",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Blob and signed-reference overreach",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Validation rules"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "ATTACK-CLASSES.md#Injection",
+        "reason": "Action params are parsed as JSON and domain validators bound the reviewed fields; no source-grounded injection sink was found in this pass."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "recon-authority",
+    "reviewed_paths": [
+      "src/server/action-routes.ts",
+      "src/actions/index.ts",
+      "src/actions/maintenance.ts",
+      "worker.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-authority",
+        "reviewed_paths": [
+          "src/server/action-routes.ts",
+          "src/actions/index.ts",
+          "src/actions/maintenance.ts",
+          "worker.ts"
+        ],
+        "invariant": "Every public action that can satisfy evidence or change domain state must enforce the complete server-side authorization and storage invariant.",
+        "method": "source",
+        "result": "The public registerAttachment action validates the key prefix and metadata but does not verify that the referenced R2 object exists or was written by the upload gateway; review/approval count metadata only.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "action-register-attachment-metadata-only"
+    ],
+    "unresolved": [
+      "A compliant isolated local request test and deployed action test are required to prove the public action is reachable and that a fabricated metadata row can satisfy review in the configured DeepSpace runtime."
+    ]
+  },
+  {
+    "coverage_id": "src%2Fai%2Fagent.ts%23registerAgent::src%2Fai%2Fagent.ts%23createAccessResolver::profile%2Fquick%2Fall-in-scope-subsystems::AI-AND-LLM.md%23Excessive%20agency%20and%20confused-deputy%20authority",
+    "canonical_refs": {
+      "surface": "src/ai/agent.ts#registerAgent",
+      "boundary": "src/ai/agent.ts#createAccessResolver",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "AI-AND-LLM.md#Excessive agency and confused-deputy authority"
+    },
+    "surface": "AI and agent tool transports",
+    "boundary": "src/ai/agent.ts#createAccessResolver",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "Excessive agency and confused-deputy authority",
+    "starting_paths": [
+      "src/ai/agent.ts",
+      "src/ai/chat-routes.ts",
+      "src/ai/tools.ts",
+      "worker.ts"
+    ],
+    "ordinary_attack_class_block": null,
+    "selected_companion_blocks": [
+      "AI-AND-LLM.md#Core discipline",
+      "AI-AND-LLM.md#Excessive agency and confused-deputy authority",
+      "AI-AND-LLM.md#Action-confirmation and approval binding",
+      "AI-AND-LLM.md#MCP and sub-agent trust classes",
+      "AI-AND-LLM.md#Universal moves",
+      "AI-AND-LLM.md#Validation rules"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "AI-AND-LLM.md#Indirect injection through retrieved or ingested content",
+        "reason": "No retrieval, ingestion, or external knowledge source is configured in the target."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "recon-surfaces",
+    "reviewed_paths": [
+      "src/ai/agent.ts",
+      "src/ai/chat-routes.ts",
+      "src/ai/tools.ts",
+      "worker.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-surfaces",
+        "reviewed_paths": [
+          "src/ai/agent.ts",
+          "src/ai/chat-routes.ts",
+          "src/ai/tools.ts",
+          "worker.ts"
+        ],
+        "invariant": "Agent tools must run only for a verified app member as that same user, with record permissions remaining authoritative.",
+        "method": "source",
+        "result": "Both browser and agent routes resolve verified identity and membership; tools use the caller's RecordRoom identity and no prompt-level authority was treated as a security control.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "src%2Fpages%2F%28app%29%2F%28app%20boundary%29::src%2Fpages%2F%28app%29%2F_layout.tsx%23RecordProvider::profile%2Fquick%2Fall-in-scope-subsystems::CLIENT-SIDE.md%23Credentialed%20CORS%20trust",
+    "canonical_refs": {
+      "surface": "src/pages/(app)/(app boundary)",
+      "boundary": "src/pages/(app)/_layout.tsx#RecordProvider",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "CLIENT-SIDE.md#Credentialed CORS trust"
+    },
+    "surface": "Application browser boundary",
+    "boundary": "src/pages/(app)/_layout.tsx#RecordProvider",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "Credentialed CORS trust",
+    "starting_paths": [
+      "src/pages/(app)/_layout.tsx",
+      "worker.ts",
+      "public/_headers"
+    ],
+    "ordinary_attack_class_block": null,
+    "selected_companion_blocks": [
+      "CLIENT-SIDE.md#Core discipline",
+      "CLIENT-SIDE.md#Credentialed CORS trust",
+      "CLIENT-SIDE.md#Universal moves",
+      "CLIENT-SIDE.md#Validation rules",
+      "WEB-PROTOCOL-AND-AUTH.md#Ordinary CSRF"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "CLIENT-SIDE.md#Service-worker registration and scope takeover",
+        "reason": "No service worker registration or worker script is present in the target source."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "recon-stack",
+    "reviewed_paths": [
+      "src/pages/(app)/_layout.tsx",
+      "worker.ts",
+      "public/_headers"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-stack",
+        "reviewed_paths": [
+          "src/pages/(app)/_layout.tsx",
+          "worker.ts",
+          "public/_headers"
+        ],
+        "invariant": "Browser requests and responses must not grant data access through ambient cross-origin credentials.",
+        "method": "source",
+        "result": "CORS uses the Hono default wildcard without credentials, while the app emits restrictive security headers; no source-grounded credentialed CORS exploit was established.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "src%2Fserver%2Fhttp-routes.ts%23%2Fapi%2Ffiles%2F%2A::src%2Fserver%2Fhttp-routes.ts%23registerPlatformProxyRoutes::profile%2Fquick%2Fall-in-scope-subsystems::WEB-PROTOCOL-AND-AUTH.md%23Ordinary%20CSRF",
+    "canonical_refs": {
+      "surface": "src/server/http-routes.ts#/api/files/*",
+      "boundary": "src/server/http-routes.ts#registerPlatformProxyRoutes",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "WEB-PROTOCOL-AND-AUTH.md#Ordinary CSRF"
+    },
+    "surface": "Platform file proxy",
+    "boundary": "src/server/http-routes.ts#registerPlatformProxyRoutes",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "Ordinary CSRF",
+    "starting_paths": [
+      "src/server/http-routes.ts",
+      "node_modules/deepspace/dist/worker.js"
+    ],
+    "ordinary_attack_class_block": null,
+    "selected_companion_blocks": [
+      "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+      "WEB-PROTOCOL-AND-AUTH.md#Ordinary CSRF",
+      "WEB-PROTOCOL-AND-AUTH.md#Cookie scope and transport",
+      "WEB-PROTOCOL-AND-AUTH.md#Universal moves",
+      "WEB-PROTOCOL-AND-AUTH.md#Validation rules",
+      "CLOUD-AND-DEPLOYMENT.md#Object and signed-URL policy confusion"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "WEB-PROTOCOL-AND-AUTH.md#SAML signed-object and assertion binding",
+        "reason": "The target has no SAML flow."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "recon-stack",
+    "reviewed_paths": [
+      "src/server/http-routes.ts",
+      "node_modules/deepspace/dist/worker.js"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-stack",
+        "reviewed_paths": [
+          "src/server/http-routes.ts",
+          "node_modules/deepspace/dist/worker.js"
+        ],
+        "invariant": "Session-cookie fallback for private files must be read-only; mutating file verbs require an explicit bearer credential.",
+        "method": "source",
+        "result": "The route forwards the original method/body, but the installed SDK's resolveSessionReadAuth explicitly returns null for methods other than GET/HEAD and rejects cross-site cookie reads; no cookie-based mutation path was established.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "src%2Fserver%2Fhttp-routes.ts%23GET%20%2Fapi%2Fauth%2Foauth-complete::src%2Fserver%2Fhttp-routes.ts%23registerAuthAndIntegrationRoutes::profile%2Fquick%2Fall-in-scope-subsystems::WEB-PROTOCOL-AND-AUTH.md%23OAuth%2FOIDC%20request%20and%20callback%20binding",
+    "canonical_refs": {
+      "surface": "src/server/http-routes.ts#GET /api/auth/oauth-complete",
+      "boundary": "src/server/http-routes.ts#registerAuthAndIntegrationRoutes",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "WEB-PROTOCOL-AND-AUTH.md#OAuth/OIDC request and callback binding"
+    },
+    "surface": "Browser OAuth completion",
+    "boundary": "src/server/http-routes.ts#registerAuthAndIntegrationRoutes",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "OAuth/OIDC request and callback binding",
+    "starting_paths": [
+      "src/server/http-routes.ts"
+    ],
+    "ordinary_attack_class_block": null,
+    "selected_companion_blocks": [
+      "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+      "WEB-PROTOCOL-AND-AUTH.md#OAuth/OIDC request and callback binding",
+      "WEB-PROTOCOL-AND-AUTH.md#Session fixation and invalidation",
+      "WEB-PROTOCOL-AND-AUTH.md#Universal moves",
+      "WEB-PROTOCOL-AND-AUTH.md#Validation rules"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "WEB-PROTOCOL-AND-AUTH.md#SAML signed-object and assertion binding",
+        "reason": "The target does not implement SAML."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "recon-stack",
+    "reviewed_paths": [
+      "src/server/http-routes.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-stack",
+        "reviewed_paths": [
+          "src/server/http-routes.ts"
+        ],
+        "invariant": "A browser OAuth completion must bind the exchanged code to the initiating flow or an equivalent provider-enforced one-time/PKCE state.",
+        "method": "source",
+        "result": "The app callback exchanges the query code and installs a session cookie without a source-visible state/PKCE binding; the auth-worker contract is external.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "http.oauth-code-state-binding"
+    ],
+    "unresolved": [
+      "Auth-worker exchange-code semantics, one-time use, state, PKCE, redirect binding, and browser initiation state are not present in the repository."
+    ]
+  },
+  {
+    "coverage_id": "src%2Fserver%2Fhttp-routes.ts%23registerAuthAndIntegrationRoutes::src%2Fserver%2Fhttp-routes.ts%23reassertAppIdentity::profile%2Fquick%2Fall-in-scope-subsystems::WEB-PROTOCOL-AND-AUTH.md%23JWT%20verification%20and%20claim%20binding",
+    "canonical_refs": {
+      "surface": "src/server/http-routes.ts#registerAuthAndIntegrationRoutes",
+      "boundary": "src/server/http-routes.ts#reassertAppIdentity",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "WEB-PROTOCOL-AND-AUTH.md#JWT verification and claim binding"
+    },
+    "surface": "HTTP auth and platform/integration proxies",
+    "boundary": "src/server/http-routes.ts#reassertAppIdentity",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "JWT verification and claim binding",
+    "starting_paths": [
+      "src/server/http-routes.ts",
+      "src/server/action-routes.ts",
+      "src/server/realtime-routes.ts",
+      "wrangler.toml"
+    ],
+    "ordinary_attack_class_block": null,
+    "selected_companion_blocks": [
+      "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+      "WEB-PROTOCOL-AND-AUTH.md#JWT verification and claim binding",
+      "WEB-PROTOCOL-AND-AUTH.md#OAuth/OIDC request and callback binding",
+      "WEB-PROTOCOL-AND-AUTH.md#Universal moves",
+      "WEB-PROTOCOL-AND-AUTH.md#Validation rules",
+      "CLOUD-AND-DEPLOYMENT.md#Trusted-proxy and mesh identity bypass"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "WEB-PROTOCOL-AND-AUTH.md#SAML signed-object and assertion binding",
+        "reason": "No SAML integration exists in the target."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "recon-stack",
+    "reviewed_paths": [
+      "src/server/http-routes.ts",
+      "src/server/action-routes.ts",
+      "src/server/realtime-routes.ts",
+      "wrangler.toml"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-stack",
+        "reviewed_paths": [
+          "src/server/http-routes.ts",
+          "src/server/action-routes.ts",
+          "src/server/realtime-routes.ts",
+          "wrangler.toml"
+        ],
+        "invariant": "Caller identity and app identity must be derived from verified runtime state, not request-controlled headers or path parameters.",
+        "method": "source",
+        "result": "Bearer JWTs are verified with configured issuer/public key; caller identity headers are removed and app identity is reasserted from bindings; integration/debug gates fail closed by default.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "src%2Fserver%2Fmaintenance-files.ts%23GET%20%2Fapi%2Fmaintenance%2Fattachments%2F%3AattachmentId::src%2Fserver%2Fmaintenance-files.ts%23registerMaintenanceFileRoutes::profile%2Fquick%2Fall-in-scope-subsystems::CLOUD-AND-DEPLOYMENT.md%23Object%20and%20signed-URL%20policy%20confusion",
+    "canonical_refs": {
+      "surface": "src/server/maintenance-files.ts#GET /api/maintenance/attachments/:attachmentId",
+      "boundary": "src/server/maintenance-files.ts#registerMaintenanceFileRoutes",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "CLOUD-AND-DEPLOYMENT.md#Object and signed-URL policy confusion"
+    },
+    "surface": "MaintenanceFlow private evidence gateway",
+    "boundary": "src/server/maintenance-files.ts#registerMaintenanceFileRoutes",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "Object and signed-URL policy confusion",
+    "starting_paths": [
+      "src/server/maintenance-files.ts",
+      "src/actions/maintenance.ts",
+      "wrangler.toml",
+      "src/schemas/maintenance-schema.ts"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Resource and file handling",
+    "selected_companion_blocks": [
+      "CLOUD-AND-DEPLOYMENT.md#Core discipline",
+      "CLOUD-AND-DEPLOYMENT.md#Object and signed-URL policy confusion",
+      "CLOUD-AND-DEPLOYMENT.md#Universal moves",
+      "CLOUD-AND-DEPLOYMENT.md#Validation rules",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Blob and signed-reference overreach",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Validation rules"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "CLOUD-AND-DEPLOYMENT.md#Workload identity overreach",
+        "reason": "No cloud role assumption or workload identity exchange is implemented in target source."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "recon-authority",
+    "reviewed_paths": [
+      "src/server/maintenance-files.ts",
+      "src/actions/maintenance.ts",
+      "wrangler.toml",
+      "src/schemas/maintenance-schema.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-authority",
+        "reviewed_paths": [
+          "src/server/maintenance-files.ts",
+          "src/actions/maintenance.ts",
+          "wrangler.toml",
+          "src/schemas/maintenance-schema.ts"
+        ],
+        "invariant": "Private evidence bytes must require authenticated workspace membership and must not be served from a client-controlled public URL.",
+        "method": "source",
+        "result": "The gateway requires bearer authentication, reads metadata through the action tools, fetches from the private R2 binding, and returns private/no-store with nosniff; shared authenticated-member access is intentional per the brief.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "src%2Fserver%2Fmaintenance-files.ts%23POST%20%2Fapi%2Fmaintenance%2Forders%2F%3AworkOrderId%2Fattachments::src%2Factions%2Fmaintenance.ts%23authorizeAttachmentUpload::profile%2Fquick%2Fall-in-scope-subsystems::RESOURCE-EXHAUSTION-AND-AVAILABILITY.md%23Quota-accounting%20scope%20and%20reset%20gaps",
+    "canonical_refs": {
+      "surface": "src/server/maintenance-files.ts#POST /api/maintenance/orders/:workOrderId/attachments",
+      "boundary": "src/actions/maintenance.ts#authorizeAttachmentUpload",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Quota-accounting scope and reset gaps"
+    },
+    "surface": "Evidence upload and domain quotas",
+    "boundary": "src/actions/maintenance.ts#authorizeAttachmentUpload",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "Quota-accounting scope and reset gaps",
+    "starting_paths": [
+      "src/server/maintenance-files.ts",
+      "src/actions/maintenance.ts",
+      "src/server/action-routes.ts"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Resource and file handling",
+    "selected_companion_blocks": [
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Core discipline",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Unbounded buffering and cardinality",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Quota-accounting scope and reset gaps",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Universal moves",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Validation rules",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Retention and queued-work overrun"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Decompression and representation amplification",
+        "reason": "Accepted formats are image bytes with signature checks; no decompressor is used by the target."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "recon-execution",
+    "reviewed_paths": [
+      "src/server/maintenance-files.ts",
+      "src/actions/maintenance.ts",
+      "src/server/action-routes.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-execution",
+        "reviewed_paths": [
+          "src/server/maintenance-files.ts",
+          "src/actions/maintenance.ts",
+          "src/server/action-routes.ts"
+        ],
+        "invariant": "Authenticated upload work must have bounded bytes/cardinality and failed registration must remove the blob.",
+        "method": "source",
+        "result": "The route caps images at 5 MiB, limits order/user attachment counts through serialized actions, validates signatures, and deletes the R2 object on registration failure/replay.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "src%2Fserver%2Frealtime-routes.ts%23%2Fws%2F%3AroomId::src%2Fserver%2Frealtime-routes.ts%23wsRoute::profile%2Fquick%2Fall-in-scope-subsystems::RESOURCE-EXHAUSTION-AND-AVAILABILITY.md%23Unbounded%20buffering%20and%20cardinality",
+    "canonical_refs": {
+      "surface": "src/server/realtime-routes.ts#/ws/:roomId",
+      "boundary": "src/server/realtime-routes.ts#wsRoute",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Unbounded buffering and cardinality"
+    },
+    "surface": "Generic RecordRoom WebSocket",
+    "boundary": "src/server/realtime-routes.ts#wsRoute",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "Unbounded buffering and cardinality",
+    "starting_paths": [
+      "src/server/realtime-routes.ts",
+      "worker.ts",
+      "src/pages/(app)/_layout.tsx"
+    ],
+    "ordinary_attack_class_block": null,
+    "selected_companion_blocks": [
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Core discipline",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Unbounded buffering and cardinality",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Pre-authentication work imbalance",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Universal moves",
+      "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Validation rules",
+      "CLOUD-AND-DEPLOYMENT.md#Unexpected service or management-plane reachability"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "RESOURCE-EXHAUSTION-AND-AVAILABILITY.md#Decompression and representation amplification",
+        "reason": "No decompression or archive processing is visible on this route."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "recon-stack",
+    "reviewed_paths": [
+      "src/server/realtime-routes.ts",
+      "worker.ts",
+      "src/pages/(app)/_layout.tsx"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-stack",
+        "reviewed_paths": [
+          "src/server/realtime-routes.ts",
+          "worker.ts",
+          "src/pages/(app)/_layout.tsx"
+        ],
+        "invariant": "A public realtime entry point must not let an unauthenticated caller allocate arbitrary app data rooms without a bounded namespace or admission check.",
+        "method": "source",
+        "result": "The generic /ws/:roomId route accepts an optional token and calls idFromName on attacker-controlled roomId; no app-scope allowlist or connection/rate limit is visible in repository code.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "realtime-arbitrary-room-allocation"
+    ],
+    "unresolved": [
+      "The target runtime must establish whether RecordRoom rejects the anonymous upgrade before durable room allocation and whether platform quotas/routing make arbitrary names materially exploitable."
+    ]
+  },
+  {
+    "coverage_id": "src%2Fserver%2Frealtime-routes.ts%23GET%20%2Fws%2Fyjs%2F%3AdocId::src%2Fserver%2Frealtime-routes.ts%23resolveDocsYjsRole::profile%2Fquick%2Fall-in-scope-subsystems::DATA-ISOLATION-AND-LIFECYCLE.md%23Missing%20tenant%20or%20owner%20enforcement",
+    "canonical_refs": {
+      "surface": "src/server/realtime-routes.ts#GET /ws/yjs/:docId",
+      "boundary": "src/server/realtime-routes.ts#resolveDocsYjsRole",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "DATA-ISOLATION-AND-LIFECYCLE.md#Missing tenant or owner enforcement"
+    },
+    "surface": "Yjs document WebSocket",
+    "boundary": "src/server/realtime-routes.ts#resolveDocsYjsRole",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "Missing tenant or owner enforcement",
+    "starting_paths": [
+      "src/server/realtime-routes.ts",
+      "src/schemas.ts"
+    ],
+    "ordinary_attack_class_block": null,
+    "selected_companion_blocks": [
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Core discipline",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Missing tenant or owner enforcement",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Policy and query disagreement",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Universal moves",
+      "DATA-ISOLATION-AND-LIFECYCLE.md#Validation rules"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "DATA-ISOLATION-AND-LIFECYCLE.md#Export and backup scope expansion",
+        "reason": "No export or backup flow is implemented in the target."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "recon-stack",
+    "reviewed_paths": [
+      "src/server/realtime-routes.ts",
+      "src/schemas.ts"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-stack",
+        "reviewed_paths": [
+          "src/server/realtime-routes.ts",
+          "src/schemas.ts"
+        ],
+        "invariant": "Document-level membership checks must not silently degrade to broad member access when the expected documents collection is absent.",
+        "method": "source",
+        "result": "resolveDocsYjsRole returns member when the documents collection is not registered, while the current schema list contains no documents collection; actual Yjs data and SDK role semantics require validation.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "realtime-yjs-missing-schema-member-fallback"
+    ],
+    "unresolved": [
+      "The SDK Yjs role interpretation and whether any sensitive Yjs documents are populated are external/runtime facts."
+    ]
+  },
+  {
+    "coverage_id": "vite.config.ts%23vite%20build::wrangler.toml%23assets%20and%20secrets::profile%2Fquick%2Fall-in-scope-subsystems::SUPPLY-CHAIN-AND-RELEASE.md%23Build-context%20inclusion",
+    "canonical_refs": {
+      "surface": "vite.config.ts#vite build",
+      "boundary": "wrangler.toml#assets and secrets",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "SUPPLY-CHAIN-AND-RELEASE.md#Build-context inclusion"
+    },
+    "surface": "Build and release packaging",
+    "boundary": "wrangler.toml#assets and secrets",
+    "subsystem": "Quick profile: all in-scope subsystems",
+    "attack_class": "Build-context inclusion",
+    "starting_paths": [
+      "vite.config.ts",
+      "wrangler.toml",
+      ".gitignore",
+      "package.json",
+      "package-lock.json",
+      "public/_headers"
+    ],
+    "ordinary_attack_class_block": null,
+    "selected_companion_blocks": [
+      "SUPPLY-CHAIN-AND-RELEASE.md#Core discipline",
+      "SUPPLY-CHAIN-AND-RELEASE.md#Dependency source and namespace confusion",
+      "SUPPLY-CHAIN-AND-RELEASE.md#Mutable and unbound build inputs",
+      "SUPPLY-CHAIN-AND-RELEASE.md#Build-context inclusion",
+      "SUPPLY-CHAIN-AND-RELEASE.md#Release authorization and signing-policy gaps",
+      "SUPPLY-CHAIN-AND-RELEASE.md#Universal moves",
+      "SUPPLY-CHAIN-AND-RELEASE.md#Validation rules"
+    ],
+    "excluded_blocks": [
+      {
+        "block": "SUPPLY-CHAIN-AND-RELEASE.md#Untrusted code in a privileged workflow",
+        "reason": "No CI workflow is present in the target directory."
+      }
+    ],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "blocked",
+    "agent_id": "recon-execution",
+    "reviewed_paths": [
+      "vite.config.ts",
+      "wrangler.toml",
+      ".gitignore",
+      "package.json",
+      "package-lock.json",
+      "public/_headers"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "recon-execution",
+        "reviewed_paths": [
+          "vite.config.ts",
+          "wrangler.toml",
+          ".gitignore",
+          "package.json",
+          "package-lock.json",
+          "public/_headers"
+        ],
+        "invariant": "Release artifacts must be derived from the intended clean source and must not include local secrets or uncontrolled build inputs.",
+        "method": "source",
+        "result": "Source shows explicit asset-ignore entries for .dev.vars/wrangler.json and no declared secrets in wrangler.toml, but actual clean-tree release contents and deploy-time overlays cannot be established offline.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": [
+      "Required OS sandbox and deployment/code-authority evidence are unavailable; do not claim release packaging or production secret isolation as verified."
+    ]
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "verdict": "needs_validation",
+    "fingerprint": "action-register-attachment-metadata-only",
+    "title": "Public registerAttachment action can register evidence without proving an R2 object exists",
+    "description": "The generic authenticated action endpoint exposes registerAttachment directly. Its handler validates that storageKey starts with the current order prefix, but it never performs an R2 existence/read check and does not require a server-issued upload receipt. It creates order_attachments metadata and advances the order version. submitWorkForReview and approveWorkOrder then treat the presence of matching metadata as sufficient evidence, so an assigned technician who calls the action directly may be able to submit and obtain approval for a nonexistent or unrelated blob.",
+    "claimed_root_cause": "The upload gateway and metadata-registration action are separate public capabilities, and the domain approval checks trust metadata cardinality instead of binding the metadata to a verified object written by the gateway.",
+    "trace": [
+      {"kind": "entrypoint", "file": "src/server/action-routes.ts", "line": 44, "scope": "registerActionRoutes", "description": "Any own-key action in the exported action registry is callable by an authenticated bearer caller."},
+      {"kind": "propagation", "file": "src/actions/index.ts", "line": 49, "scope": "actions.registerAttachment", "description": "registerAttachment is included in the public action registry alongside normal domain actions."},
+      {"kind": "propagation", "file": "src/actions/maintenance.ts", "line": 420, "scope": "registerAttachment storageKey validation", "description": "The handler checks only the order-prefix shape and rejects traversal-like strings; it does not verify the object in MAINTENANCE_EVIDENCE."},
+      {"kind": "sink", "file": "src/actions/maintenance.ts", "line": 432, "scope": "registerAttachment metadata create", "description": "The handler creates order_attachments metadata from caller-supplied storageKey/content metadata and then updates the order."},
+      {"kind": "sink", "file": "src/actions/maintenance.ts", "line": 383, "scope": "submitWorkForReview evidence gate", "description": "Submission queries repair attachment metadata and checks count, without checking the referenced blob."},
+      {"kind": "sink", "file": "src/actions/maintenance.ts", "line": 317, "scope": "approveWorkOrder evidence gate", "description": "Approval repeats the metadata-count check, so the same unbound reference can satisfy closure."}
+    ],
+    "evidence": [
+      {"file": "src/server/action-routes.ts", "line": 44, "description": "Authenticated action dispatch is generic and does not distinguish the file-registration action from other actions."},
+      {"file": "src/server/maintenance-files.ts", "line": 71, "description": "The separate upload route writes the R2 object before invoking registerAttachment, but that ordering is not enforced when the action is called directly."},
+      {"file": "src/actions/maintenance.ts", "line": 420, "description": "Only a path-prefix validation is applied to storageKey."},
+      {"file": "src/actions/maintenance.ts", "line": 383, "description": "Review submission requires at least one matching metadata record, not a readable R2 object."}
+    ],
+    "blockers": [
+      "The required OS-enforced audit sandbox is unavailable, so no isolated fake-DO/fake-R2 request test was run.",
+      "The deployed worker and exact DeepSpace action exposure are not available for a production confirmation."
+    ],
+    "validation_plan": {
+      "local": "In a compliant isolated worker test, create an in-progress order assigned to a technician, call POST /api/actions/registerAttachment with a valid-looking orders/<id>/fake.png key but do not put that key in R2, then call submitWorkForReview and verify whether the order reaches awaiting_review. Also verify GET /api/maintenance/attachments/<id> returns File not found.",
+      "deployment": "Repeat the same sequence against the deployed app using a real test account and fictitious data. A successful submission/approval with no R2 object confirms the finding; a server-side object existence/receipt check rejects it."
+    }
+  },
+  {
+    "verdict": "needs_validation",
+    "fingerprint": "realtime-arbitrary-room-allocation",
+    "title": "Anonymous generic WebSocket route accepts attacker-controlled RecordRoom names",
+    "description": "The generic /ws/:roomId route treats the room identifier as a free-form Durable Object name and allows the token to be absent. It forwards the request to env.RECORD_ROOMS.idFromName(id) without constraining the name to the app scope or requiring membership. A remote caller can therefore probe arbitrary names and may cause durable room allocation/connection work for each unique identifier, creating a potential resource-accumulation or cross-scope boundary if the RecordRoom rejects only after allocation.",
+    "claimed_root_cause": "The route is a generic sharding primitive rather than an app-specific endpoint: it exposes arbitrary room namespace selection and optional authentication without an application-scope allowlist or rate limit.",
+    "trace": [
+      {"kind": "entrypoint", "file": "src/server/realtime-routes.ts", "line": 125, "scope": "GET /ws/:roomId", "description": "The worker exposes the generic room route publicly."},
+      {"kind": "propagation", "file": "src/server/realtime-routes.ts", "line": 29, "scope": "wsRoute token handling", "description": "The query token is optional; when absent, auth remains null and the request is still constructed."},
+      {"kind": "propagation", "file": "src/server/realtime-routes.ts", "line": 36, "scope": "wsRoute room selection", "description": "The route takes roomId directly from the request path and passes it to the Durable Object namespace."},
+      {"kind": "sink", "file": "src/server/realtime-routes.ts", "line": 39, "scope": "RECORD_ROOMS.idFromName", "description": "Each attacker-chosen room name is resolved to a RecordRoom stub and fetched."}
+    ],
+    "evidence": [
+      {"file": "src/server/realtime-routes.ts", "line": 25, "description": "The generic helper does not require the room ID to equal app:<DEEPSPACE_APP_ID>."},
+      {"file": "src/server/realtime-routes.ts", "line": 31, "description": "Anonymous requests are passed into authenticatedRoomRequest when no token is supplied."},
+      {"file": "src/server/realtime-routes.ts", "line": 39, "description": "The arbitrary identifier is used as the namespace name before the room handles the request."}
+    ],
+    "blockers": [
+      "The required OS-enforced sandbox is unavailable, so room allocation and anonymous WebSocket upgrade behavior were not executed.",
+      "DeepSpace/Cloudflare Durable Object quotas and whether rejected upgrades still allocate persistent room state are deployment facts not visible in source."
+    ],
+    "validation_plan": {
+      "local": "In an isolated Miniflare/Worker test with a fake or instrumented RECORD_ROOMS namespace, send anonymous WebSocket requests to many unique /ws/<random> names and record whether idFromName/fetch creates durable state or accepts a socket before authorization. Confirm the app-scoped client path still works after constraining the route.",
+      "deployment": "Use a bounded test set of unique room names on the deployed app, with no business data, and inspect worker/DO metrics and connection responses. Confirm whether anonymous requests allocate state and whether platform quotas prevent material abuse."
+    }
+  },
+  {
+    "verdict": "needs_validation",
+    "fingerprint": "http.oauth-code-state-binding",
+    "title": "Browser OAuth completion has no source-visible state binding",
+    "description": "The browser OAuth completion endpoint accepts a code from the query string, exchanges it, and sets the app session cookie. The app source does not bind that code to a browser-initiated OAuth state or PKCE value. If the external exchange endpoint accepts an attacker-obtained code without its own binding, login CSRF or session substitution may be possible.",
+    "claimed_root_cause": "The app trusts an externally supplied OAuth code and installs the returned session without a source-visible state/initiator binding.",
+    "trace": [
+      {"kind": "entrypoint", "file": "src/server/http-routes.ts", "line": 98, "scope": "GET /api/auth/oauth-complete", "description": "The route accepts browser OAuth completion requests."},
+      {"kind": "propagation", "file": "src/server/http-routes.ts", "line": 111, "scope": "authWorkerFetch('/api/auth/exchange-code')", "description": "The query-provided code is forwarded to the external auth worker without a source-visible app state or PKCE value."},
+      {"kind": "sink", "file": "src/server/http-routes.ts", "line": 122, "scope": "Set-Cookie session installation", "description": "The returned session token is installed in the app-scoped session cookie."}
+    ],
+    "evidence": [
+      {"file": "src/server/http-routes.ts", "line": 102, "description": "The browser branch reads only the query-string code."},
+      {"file": "src/server/http-routes.ts", "line": 111, "description": "The code is exchanged through the external auth worker."},
+      {"file": "src/server/http-routes.ts", "line": 126, "description": "The returned session token is written as an HttpOnly, Secure, SameSite=Lax cookie."}
+    ],
+    "blockers": [
+      "The auth-worker implementation and exchange-code contract are not present locally.",
+      "Source does not establish whether the code is single-use and bound to an initiating browser state, PKCE verifier, redirect URI, or client."
+    ],
+    "validation_plan": {
+      "deployment": "Inspect the auth-worker exchange-code contract or run a dummy-account OAuth flow to establish whether a code obtained in one browser can be redeemed in another browser without the initiating state or PKCE verifier."
+    }
+  },
+  {
+    "verdict": "needs_validation",
+    "fingerprint": "realtime-yjs-missing-schema-member-fallback",
+    "title": "Yjs access falls back to member when the documents collection is absent",
+    "description": "The authenticated Yjs route grants role member when the documents collection is not registered. The current application schema list contains no documents collection. If the exposed Yjs room contains sensitive documents, an authenticated user who supplies a document ID could receive member access without document-level membership checks.",
+    "claimed_root_cause": "The not-docs-room fallback converts an absent documents schema into an authenticated member grant.",
+    "trace": [
+      {"kind": "entrypoint", "file": "src/server/realtime-routes.ts", "line": 129, "scope": "GET /ws/yjs/:docId", "description": "The route accepts an authenticated document identifier."},
+      {"kind": "propagation", "file": "src/server/realtime-routes.ts", "line": 109, "scope": "resolveDocsYjsRole", "description": "A missing documents schema returns the member role."},
+      {"kind": "sink", "file": "src/server/realtime-routes.ts", "line": 139, "scope": "authenticatedRoomRequest(..., { role })", "description": "The member role is forwarded to the Yjs Durable Object."}
+    ],
+    "evidence": [
+      {"file": "src/server/realtime-routes.ts", "line": 94, "description": "A missing documents schema is classified as not-docs-room."},
+      {"file": "src/server/realtime-routes.ts", "line": 109, "description": "The not-docs-room case returns member."},
+      {"file": "src/schemas.ts", "line": 22, "description": "The current registered schema list contains no documents collection."},
+      {"file": "src/server/realtime-routes.ts", "line": 141, "description": "The request is forwarded to the YJS_ROOMS Durable Object."}
+    ],
+    "blockers": [
+      "YjsRoom's interpretation of the forwarded member role is implemented by the external SDK.",
+      "The repository does not establish whether any Yjs document IDs are populated or whether this generic route is used by the product."
+    ],
+    "validation_plan": {
+      "local": "Use bounded dummy Yjs room fixtures with and without a registered documents schema and compare the room's read/write decision for a second authenticated dummy user.",
+      "deployment": "Inventory whether any Yjs document IDs are populated and whether document membership is expected to be enforced on this route."
+    }
+  }
+]
