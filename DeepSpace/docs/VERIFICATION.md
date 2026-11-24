@@ -19,7 +19,7 @@
 | `npm run build` | Passed locally; Wrangler log-file EPERM warning is environment-only |
 | `npx playwright test --config tests/playwright.config.ts tests/smoke.spec.ts` | Passed locally — 6 smoke tests |
 | `npx deepspace test run all` | Not completed in this session because `auth.deep.space` was unreachable |
-| Production deploy | Not run in this session |
+| Production deploy | Succeeded — https://maintenanceflow.app.space |
 
 ## Acceptance checks still requiring a deployed app
 

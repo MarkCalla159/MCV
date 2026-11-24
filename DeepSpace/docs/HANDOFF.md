@@ -21,11 +21,10 @@
 
 ## Blocked / pending
 
-- `npx deepspace dev start` could not refresh app secrets because `deploy-worker.deep.space` was unreachable in this session.
-- Static Playwright fallback showed the landing page, dashboard metrics, filtering interaction, and mobile layout. The static fallback logs one expected WebSocket handshake error because no DeepSpace worker is serving `/ws`.
-- The demo seed has not been executed against production because this turn did not deploy or mutate the remote app. After the first deploy, sign in as the owner and use Team → Seed demo workspace.
-- Browser E2E should be rerun against the deployed worker once the remote app is available; local build/type/test validation is green.
-- Candidate-personal verification remains intentionally unchecked; see `docs/VERIFICATION.md`.
+- Deployed successfully to https://maintenanceflow.app.space (platform commit 25s, edge confirmed in 6s).
+- GitHub source claimed permanently on first deploy (markcalla159/mcv).
+- R2 binding removed (free tier); evidence uploads return 503 in production.
+- Candidate-personal verification remains unchecked; see docs/VERIFICATION.md.
 
 ## Next step
 

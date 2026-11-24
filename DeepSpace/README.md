@@ -2,6 +2,10 @@
 
 MaintenanceFlow is a DeepSpace application for coordinating equipment issues, repairs, evidence, and supervisor approval in a shared demo workspace.
 
+## Live app
+
+https://maintenanceflow.app.space
+
 ## Current status
 
 The official DeepSpace starter is extended with MaintenanceFlow's shared sandbox: server-validated profiles, assets, work orders, comments, checklists, private evidence, audit history, role transitions, a serialized command coordinator, and an idempotent owner seed.
