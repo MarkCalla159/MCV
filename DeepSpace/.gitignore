@@ -13,3 +13,8 @@ src/router.ts
 src/modals.tsx
 .claude/launch.json
 .claude/worktrees
+.agents
+.claude
+.impeccable
+AGENTS.md
+CLAUDE.md
