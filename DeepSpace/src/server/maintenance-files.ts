@@ -49,6 +49,9 @@ export function registerMaintenanceFileRoutes(app: Hono<AppContext>): void {
     const auth = await resolveAuth(c.req.raw, c.env)
     const token = bearerToken(c.req.raw)
     if (!auth || !token) return c.json({ error: 'Unauthorized' }, 401)
+    if (!c.env.MAINTENANCE_EVIDENCE) {
+      return c.json({ success: false, error: 'Private evidence storage is not available in this environment. Contact the app owner to enable R2 storage.' }, 503)
+    }
 
     const workOrderId = c.req.param('workOrderId')
     const form = await c.req.raw.formData()
@@ -99,6 +102,9 @@ export function registerMaintenanceFileRoutes(app: Hono<AppContext>): void {
     if (!auth) return c.json({ error: 'Unauthorized' }, 401)
     const token = bearerToken(c.req.raw)
     if (!token) return c.json({ error: 'Unauthorized' }, 401)
+    if (!c.env.MAINTENANCE_EVIDENCE) {
+      return c.json({ error: 'Private evidence storage is not available in this environment.' }, 503)
+    }
     const tools = createActionTools(c.env, auth.userId, token)
     const attachment = await tools.get<any>('order_attachments', c.req.param('attachmentId'))
     if (!attachment.success) return c.json({ error: 'Attachment not found' }, 404)

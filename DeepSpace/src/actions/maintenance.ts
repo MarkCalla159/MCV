@@ -483,13 +483,16 @@ export const seedDemoWorkspace: ActionHandler<Env> = async ({ userId, params, to
     if (!existing.success) { const created = await tools.create('work_orders', order, recordId); if (!created.success) return errorResult(created) }
   }
   const demoPixel = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 31, 21, 196, 137, 0, 0, 0, 13, 73, 68, 65, 84, 120, 156, 99, 248, 207, 192, 240, 31, 0, 5, 0, 1, 255, 137, 153, 61, 29, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130])
-  for (const [workOrderId, attachmentId] of [['demo-wo-1047', 'demo-attachment-1047'], ['demo-wo-1042', 'demo-attachment-1042']] as const) {
-    const existing = await tools.get('order_attachments', attachmentId)
-    if (!existing.success) {
-      const storageKey = `seed/${workOrderId}/repair.png`
-      await env.MAINTENANCE_EVIDENCE.put(storageKey, demoPixel, { httpMetadata: { contentType: 'image/png', contentDisposition: 'inline; filename="demo-repair.png"' } })
-      const created = await tools.create('order_attachments', { workOrderId, kind: 'repair', storageKey, storageOwnerUserId: env.DEEPSPACE_APP_ID, uploadedByUserId: 'demo:technician', originalName: 'demo-repair.png', contentType: 'image/png', sizeBytes: demoPixel.byteLength, caption: 'Fictitious demo evidence', uploadedAt: seededAt, operationId: 'seed-v1' }, attachmentId)
-      if (!created.success) { await env.MAINTENANCE_EVIDENCE.delete(storageKey); return errorResult(created) }
+  const evidenceBucket = env.MAINTENANCE_EVIDENCE
+  if (evidenceBucket) {
+    for (const [workOrderId, attachmentId] of [['demo-wo-1047', 'demo-attachment-1047'], ['demo-wo-1042', 'demo-attachment-1042']] as const) {
+      const existing = await tools.get('order_attachments', attachmentId)
+      if (!existing.success) {
+        const storageKey = `seed/${workOrderId}/repair.png`
+        await evidenceBucket.put(storageKey, demoPixel, { httpMetadata: { contentType: 'image/png', contentDisposition: 'inline; filename="demo-repair.png"' } })
+        const created = await tools.create('order_attachments', { workOrderId, kind: 'repair', storageKey, storageOwnerUserId: env.DEEPSPACE_APP_ID, uploadedByUserId: 'demo:technician', originalName: 'demo-repair.png', contentType: 'image/png', sizeBytes: demoPixel.byteLength, caption: 'Fictitious demo evidence', uploadedAt: seededAt, operationId: 'seed-v1' }, attachmentId)
+        if (!created.success) { await evidenceBucket.delete(storageKey); return errorResult(created) }
+      }
     }
   }
   const result = ok({ seeded: true, profileCount: profiles.length + 1, assetCount: assets.length, orderCount: orders.length })

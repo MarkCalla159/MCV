@@ -143,7 +143,7 @@ export interface Env extends DOBindings<typeof __DO_MANIFEST__> {
   API_WORKER?: Fetcher
   API_WORKER_URL?: string
   /** Auto-provisioned private R2 bucket for shared maintenance evidence. */
-  MAINTENANCE_EVIDENCE: R2Bucket
+  MAINTENANCE_EVIDENCE?: R2Bucket
   AUTH_JWT_PUBLIC_KEY: string
   AUTH_JWT_ISSUER: string
   AUTH_WORKER_URL: string
